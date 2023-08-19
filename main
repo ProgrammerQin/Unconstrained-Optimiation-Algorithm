@@ -1,0 +1,43 @@
+def rosenbrocks_function(x, y):
+    return 100 * (y - x ** 2) ** 2 + (1 - x) ** 2
+
+
+def gradient_rosenbrock(x, y):
+    df_dx = -400 * x * (y - x ** 2) - 2 * (1 - x)
+    df_dy = 200 * (y - x ** 2)
+    return df_dx, df_dy
+
+
+def gradient_descent(rosenbrock_fn, gradient_fn, start_point, tolerance=1e-5, max_iterations=10, learning_rate=0.001):
+    x, y = start_point
+    iteration = 0
+
+    print("Iteration | (x, y)            | f(x, y)         | Gradient")
+    print("-" * 80)
+
+    while iteration < max_iterations:
+        fx = rosenbrock_fn(x, y)
+        grad_x, grad_y = gradient_fn(x, y)
+
+        print(f"{iteration:9d} | ({x:.4f}, {y:.4f}) | {fx:.4f} | ({grad_x:.4f}, {grad_y:.4f})")
+
+        if abs(grad_x) < tolerance and abs(grad_y) < tolerance:
+            break
+
+        x -= learning_rate * grad_x
+        y -= learning_rate * grad_y
+
+        iteration += 1
+
+    print("-" * 60)
+    print("Optimal Point: ({:.4f}, {:.4f})".format(x, y))
+    print("Optimal Value: {:.4f}".format(rosenbrock_fn(x, y)))
+
+
+# Starting points for the algorithm
+starting_points = [(-1, 1), (0, 1), (2, 1)]
+
+# Perform gradient descent for each starting point
+for idx, start_point in enumerate(starting_points):
+    print(f"\nStarting Point {idx + 1}: {start_point}")
+    gradient_descent(rosenbrocks_function, gradient_rosenbrock, start_point)
